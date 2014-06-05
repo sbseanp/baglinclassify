@@ -10,8 +10,6 @@ import random
 
 def add_vectors(a, b):
     '''Add vectors a and b '''
-    #assert len(a) == len(b)
-    #return [a[i]+b[i] for i in range(2)]
     return [a[i]+b[i] for i in range(len(a))]
 
 def multiply_scalar_vector(alpha, vec):
@@ -47,11 +45,11 @@ def train_classifier(filename, T, size):
     '''Read a training file and learn the parameters for each class'''
     training_file = open(filename)
     
-    # Read the dimensions and the number of training points in each class
     D, nTrue, nFalse = map(int, training_file.readline().split())
     input = []
     
     count = 0 # Line and class counters
+    '''Go through training data and append to list while applying 1 for true and 0 for false'''
     for line in training_file:       
         x = list(map(float, line.split()))
         if count < nTrue:
@@ -62,6 +60,7 @@ def train_classifier(filename, T, size):
         count+=1
     training_file.close()
     
+    '''Get bootstrap sets'''
     total_set = []
     for i in range(T):
         bootstrap_set = []
@@ -70,7 +69,8 @@ def train_classifier(filename, T, size):
             temp = input[set]
             bootstrap_set.append(temp)
         total_set.append(bootstrap_set)
-        
+    
+    '''Get centroids then get w and t'''    
     W = []
     for i in range(len(total_set)):
         bootstrap = total_set[i]
@@ -92,7 +92,8 @@ def train_classifier(filename, T, size):
         t = (l2_norm(true_centroid)**2 - l2_norm(false_centroid)**2)/2.0
         w.append(t)
         W.append(w) 
-        
+    
+    '''Package together W vector and bootstrap sets for printing later'''    
     package = []
     package.append(W)
     package.append(total_set)    
@@ -107,10 +108,12 @@ def verbose_test_classifier(filename, input):
     D, nTrue, nFalse = map(int, testing_file.readline().split())
     tp, fp, tn, fn = 0,0,0,0
     count = 0
+    '''Go line by line and test'''
     for line in testing_file:
         x = list(map(float, line.split()))
+        '''Add -1 to end of vector'''
         x.append(-1)
-        vote = 0
+        vote = 0 # Vote for the class >=0 is True
         for i in range(len(W)):
             if dot_product(W[i], x) >= 0:
                 vote += 1
@@ -125,8 +128,8 @@ def verbose_test_classifier(filename, input):
         if actual_class == 0:
             if vote >= 0:
                 tp+=1
-                x[-1] = 0
-                x.append(0)
+                x[-1] = 0 # Mark true or false
+                x.append(0) # mark correct, fp, or fn
             else:
                 fp+=1
                 x[-1] = 1
@@ -145,6 +148,7 @@ def verbose_test_classifier(filename, input):
         
     testing_file.close()
     
+    '''Print out non-verbose stuff'''
     print("Positive examples:",end=' ')
     print(tp+fp)
     print("Negative examples:",end=' ')
@@ -155,8 +159,10 @@ def verbose_test_classifier(filename, input):
     print(fn)
     print()
     
+    '''Print bootstrap sets'''
     print_bootstrap(bootstrap)
     
+    '''Print classification'''
     print("Classification:")
     for i in range(len(class_list)):
         for j in range(len(class_list[i])-2):
@@ -199,22 +205,13 @@ def normal_test_classifier(filename, input):
         if actual_class == 0:
             if vote >= 0:
                 tp+=1
-                x[-1] = 0
-                x.append(0)
             else:
                 fp+=1
-                x[-1] = 1
-                x.append(1)
         else:
             if vote >= 0:
                 fn+=1
-                x[-1] = 0
-                x.append(2)
             else:
                 tn+=1
-                x[-1] = 1
-                x.append(0)
-        class_list.append(x)
         count+=1
         
     testing_file.close()

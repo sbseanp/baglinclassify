@@ -1,0 +1,82 @@
+Positive examples: 20
+Negative examples: 20
+False positives: 1
+False negatives: 6
+
+Boostrap sample set 1:
+0.3277 4.7617 - True
+0.1017 2.7873 - False
+-3.7601 2.1812 - False
+3.1498 4.4049 - False
+-0.4251 5.5894 - True
+-1.1667 -1.8543 - False
+-0.2185 0.5413 - False
+-0.7371 3.2501 - True
+1.8045 4.2769 - True
+-2.186 3.673 - True
+
+Boostrap sample set 2:
+-1.2833 -2.329 - False
+0.0668 0.0355 - False
+-3.7601 2.1812 - False
+1.0468 4.802 - True
+-2.317 4.1706 - False
+-0.9821 5.6125 - True
+-0.0799 0.8985 - False
+3.8797 5.0389 - False
+0.0668 0.0355 - False
+-2.5241 4.4122 - False
+
+Boostrap sample set 3:
+-1.2833 -2.329 - False
+-0.6407 6.8089 - True
+0.9019 -1.8356 - False
+0.2296 5.44 - True
+-0.493 4.8193 - True
+4.7013 2.4903 - False
+1.4702 4.6732 - True
+0.0458 4.9362 - True
+3.6417 3.4255 - False
+-1.0799 5.1992 - True
+
+Classification:
+0.5824 3.9935 - True (correct)
+0.0645 5.6003 - True (correct)
+-1.3615 5.3476 - True (correct)
+-0.1818 4.0605 - True (correct)
+-0.0375 3.1037 - True (correct)
+-2.128 3.8231 - True (correct)
+-0.9905 3.827 - True (correct)
+-1.7254 5.2882 - True (correct)
+-1.5942 5.1102 - True (correct)
+0.7871 4.9978 - True (correct)
+0.0931 4.6218 - True (correct)
+-1.4827 4.9562 - True (correct)
+0.9608 6.7382 - True (correct)
+-0.4302 3.3727 - True (correct)
+0.1663 5.3763 - True (correct)
+-0.227 3.8511 - True (correct)
+2.0243 2.6405 - False (false positive)
+-0.51 3.6784 - True (correct)
+-0.6361 5.3179 - True (correct)
+0.138 4.2893 - True (correct)
+0.777 0.6224 - False (correct)
+0.6474 -0.4256 - False (correct)
+1.0486 0.6607 - False (correct)
+2.5088 1.0635 - False (correct)
+1.1569 0.053 - False (correct)
+-1.2884 -0.3712 - False (correct)
+-0.7578 -0.564 - False (correct)
+0.5551 -0.5568 - False (correct)
+-3.8951 2.5907 - False (correct)
+-3.1609 3.4093 - True (false negative)
+-3.9526 3.3173 - True (false negative)
+-2.922 4.3244 - True (false negative)
+-3.2132 2.8655 - False (correct)
+-4.1714 1.6147 - False (correct)
+3.3105 2.7505 - False (correct)
+3.5037 2.1073 - False (correct)
+4.9085 3.1222 - True (false negative)
+4.047 2.7731 - True (false negative)
+2.8375 3.6901 - True (false negative)
+3.5558 1.8797 - False (correct)
