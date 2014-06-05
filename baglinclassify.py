@@ -60,13 +60,13 @@ def train_classifier(filename, T, size):
         count+=1
     training_file.close()
     
-    '''Get bootstrap sets'''
+    '''Get bootstrap sets using random module'''
     total_set = []
     for i in range(T):
         bootstrap_set = []
         for j in range(size):
-            set = random.randint(0, nTrue+nFalse-1)
-            temp = input[set]
+            subset = random.randint(0, nTrue+nFalse-1)
+            temp = input[subset]
             bootstrap_set.append(temp)
         total_set.append(bootstrap_set)
     
@@ -86,12 +86,18 @@ def train_classifier(filename, T, size):
             else:
                 false_centroid = add_vectors(false_centroid, temp)
                 false_count+=1
-        true_centroid = multiply_scalar_vector(1.0/true_count, true_centroid)
-        false_centroid = multiply_scalar_vector(1.0/false_count, false_centroid)
-        w = add_vectors(true_centroid, multiply_scalar_vector(-1, false_centroid))
-        t = (l2_norm(true_centroid)**2 - l2_norm(false_centroid)**2)/2.0
-        w.append(t)
-        W.append(w) 
+        '''If there are no true lines taken, set W to 0'''        
+        if true_count == 0:
+            W.append(0)
+        elif false_count == 0: #If there are no false lines taken, set W to 1
+            W.append(1)
+        else: #Otherwise, find centroids   
+            true_centroid = multiply_scalar_vector(1.0/true_count, true_centroid)
+            false_centroid = multiply_scalar_vector(1.0/false_count, false_centroid)
+            w = add_vectors(true_centroid, multiply_scalar_vector(-1, false_centroid))
+            t = (l2_norm(true_centroid)**2 - l2_norm(false_centroid)**2)/2.0
+            w.append(t)
+            W.append(w) 
     
     '''Package together W vector and bootstrap sets for printing later'''    
     package = []
@@ -113,23 +119,29 @@ def verbose_test_classifier(filename, input):
         x = list(map(float, line.split()))
         '''Add -1 to end of vector'''
         x.append(-1)
-        vote = 0 # Vote for the class >=0 is True
+        vote = 0 #Vote for the class >=0 is True
         for i in range(len(W)):
-            if dot_product(W[i], x) >= 0:
-                vote += 1
-            else:
-                vote += -1
+            '''Check if the entire set is true or false already'''
+            if W[i] == 1:
+                vote = 1
+            elif W[i] == 0:
+                vote = -1
+            else: #Otherwise, just do the dot product
+                if dot_product(W[i], x) >= 0:
+                    vote += 1
+                else:
+                    vote += -1
         
         if count < nTrue:
             actual_class = 0
         else:
             actual_class = 1
-        # 0 = true, 1 = false; 0 = correct, 1 = false positive, 2 = false negative
+        #0 = true, 1 = false; 0 = correct, 1 = false positive, 2 = false negative
         if actual_class == 0:
             if vote >= 0:
                 tp+=1
-                x[-1] = 0 # Mark true or false
-                x.append(0) # mark correct, fp, or fn
+                x[-1] = 0 #Mark true or false
+                x.append(0) #mark correct, fp, or fn
             else:
                 fp+=1
                 x[-1] = 1
@@ -183,7 +195,6 @@ def normal_test_classifier(filename, input):
     testing_file = open(filename)
     
     W = input[0]
-    class_list = []
     D, nTrue, nFalse = map(int, testing_file.readline().split())
     tp, fp, tn, fn = 0,0,0,0
     count = 0
